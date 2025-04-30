@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute">
+  <!-- Apple Icon -->
+  <symbol id="apple-icon" viewBox="0 0 24 24">
+    <path d="M12 2C9.5 2 7.5 3.5 6 5.5C4.5 7.5 4 10 4 12.5C4 15 5 17 6.5 18.5C8 20 10 21 12 21C14 21 16 20 17.5 18.5C19 17 20 15 20 12.5C20 10 19.5 7.5 18 5.5C16.5 3.5 14.5 2 12 2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 2C12 2 14 4 14 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  
+  <!-- Leaf Icon -->
+  <symbol id="leaf-icon" viewBox="0 0 24 24">
+    <path d="M21 3C21 3 15.5 3 12 7.5C8.5 12 10.5 21 10.5 21C10.5 21 19 21.5 22 16C25 10.5 21 3 21 3Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11 13C11.5 13.5 12 14 12 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11 3C7.5 3 2 4 2 11C2 18 10.5 21 10.5 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  
+  <!-- Carrot Icon -->
+  <symbol id="carrot-icon" viewBox="0 0 24 24">
+    <path d="M12 2L8 6L16 14L20 10L12 2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16 14L17 19C17 19 14 22 9 22C4 22 2 19 2 19L7 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10.5 6.5L7 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13.5 9.5L17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  
+  <!-- Broccoli Icon -->
+  <symbol id="broccoli-icon" viewBox="0 0 24 24">
+    <circle cx="12" cy="6" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="8" cy="9" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="16" cy="9" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M12 10L12 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  
+  <!-- Avocado Icon -->
+  <symbol id="avocado-icon" viewBox="0 0 24 24">
+    <path d="M12 22C16.4183 22 20 18.4183 20 14C20 9.58172 16.4183 2 12 2C7.58172 2 4 9.58172 4 14C4 18.4183 7.58172 22 12 22Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="12" cy="14" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  </symbol>
+</svg>
