@@ -14,7 +14,7 @@ export function CleanBackground() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       {/* Simple, clean background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50" />
 
       {/* Subtle grid pattern */}
       <div
@@ -24,7 +24,7 @@ export function CleanBackground() {
                             linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)`,
           backgroundSize: "40px 40px",
         }}
-      ></div>
+      />
     </div>
   )
 }

@@ -16,12 +16,14 @@ export function MinimalBackground() {
 
     // Set canvas dimensions
     const resizeCanvas = () => {
+      if (!canvas) return;
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       drawBackground()
     }
 
     function drawBackground() {
+      if (!canvas || !ctx) return;
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -35,34 +37,37 @@ export function MinimalBackground() {
       ctx.globalAlpha = 0.02
 
       const gridSize = 80
-      for (let x = 0; x < canvas.width; x += gridSize) {
+      for (let x = 0; x < (canvas ? canvas.width : 0); x += gridSize) {
+        if (!ctx) continue;
         ctx.beginPath()
         ctx.moveTo(x, 0)
-        ctx.lineTo(x, canvas.height)
+        ctx.lineTo(x, canvas ? canvas.height : 0)
         ctx.stroke()
       }
 
-      for (let y = 0; y < canvas.height; y += gridSize) {
+      for (let y = 0; y < (canvas ? canvas.height : 0); y += gridSize) {
+        if (!ctx) continue;
         ctx.beginPath()
         ctx.moveTo(0, y)
-        ctx.lineTo(canvas.width, y)
+        ctx.lineTo(canvas ? canvas.width : 0, y)
         ctx.stroke()
       }
 
       // Draw a single subtle wave at the bottom
       ctx.globalAlpha = 0.03
       ctx.beginPath()
-      ctx.moveTo(0, canvas.height - 100)
+      ctx.moveTo(0, canvas ? canvas.height - 100 : 0)
 
-      for (let x = 0; x < canvas.width; x += 20) {
+      for (let x = 0; x < (canvas ? canvas.width : 0); x += 20) {
+        if (!ctx || !canvas) continue;
         const amplitude = 30
         const frequency = 0.01
         const y = canvas.height - 100 + amplitude * Math.sin(x * frequency)
         ctx.lineTo(x, y)
       }
 
-      ctx.lineTo(canvas.width, canvas.height)
-      ctx.lineTo(0, canvas.height)
+      ctx.lineTo(canvas ? canvas.width : 0, canvas ? canvas.height : 0)
+      ctx.lineTo(0, canvas ? canvas.height : 0)
       ctx.closePath()
       ctx.fillStyle = "#2A7F62"
       ctx.fill()

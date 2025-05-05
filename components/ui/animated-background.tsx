@@ -24,12 +24,12 @@ export function AnimatedBackground() {
   return (
     <div ref={containerRef} className="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
       {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/80 via-teal-50/50 to-white dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-gray-950"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/80 via-teal-50/50 to-white dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-gray-950" />
 
       {/* Animated blobs */}
       {[...Array(5)].map((_, i) => (
         <motion.div
-          key={i}
+          key={`blob-${i}-${Date.now()}-${Math.random()}`}
           className="absolute rounded-full bg-gradient-to-r from-emerald-300/10 to-teal-300/10 dark:from-emerald-500/5 dark:to-teal-500/5 blur-3xl"
           style={{
             width: `${Math.random() * 30 + 20}%`,
@@ -53,7 +53,7 @@ export function AnimatedBackground() {
       {/* Floating particles */}
       {[...Array(30)].map((_, i) => (
         <motion.div
-          key={`particle-${i}`}
+          key={`particle-${i}-${Date.now()}-${Math.random()}`}
           className="absolute rounded-full bg-emerald-400/20 dark:bg-emerald-400/10"
           style={{
             width: Math.random() * 8 + 3,
@@ -75,7 +75,7 @@ export function AnimatedBackground() {
 
       {/* Animated grid pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]">
-        <div className="h-full w-full bg-[linear-gradient(to_right,#10b98133_1px,transparent_1px),linear-gradient(to_bottom,#10b98133_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+        <div className="h-full w-full bg-[linear-gradient(to_right,#10b98133_1px,transparent_1px),linear-gradient(to_bottom,#10b98133_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
     </div>
   )

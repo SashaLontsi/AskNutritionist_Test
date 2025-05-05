@@ -2,12 +2,11 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import Footer from "@/components/ui/Footer"
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { CheckCircle, Users, BookOpen, Heart, Award, Zap } from "lucide-react"
-import { Apple } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import Footer from "@/components/ui/Footer"
 
 export default function AboutPage() {
   const teamRef = useRef(null)
@@ -23,11 +22,16 @@ export default function AboutPage() {
       className="text-textMain font-body relative"
     >
       {/* Enhanced background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-emerald-50 via-teal-50/30 to-white -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-emerald-50 via-teal-50/30 to-white -z-10" />
 
       {/* Animated wave patterns */}
       <div className="absolute inset-0 overflow-hidden opacity-20 -z-10">
-        <svg className="absolute w-full min-w-[1000px]" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <svg 
+          className="absolute w-full min-w-[1000px]" 
+          viewBox="0 0 1440 320" 
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
           <motion.path
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
@@ -48,7 +52,7 @@ export default function AboutPage() {
 
       {/* Geometric pattern background */}
       <div className="absolute inset-0 opacity-5 -z-10">
-        <svg width="100%" height="100%">
+        <svg width="100%" height="100%" aria-hidden="true">
           <pattern
             id="pattern-hex"
             x="0"
@@ -58,10 +62,10 @@ export default function AboutPage() {
             patternUnits="userSpaceOnUse"
             patternTransform="scale(4)"
           >
-            <rect width="16" height="28" fill="none"></rect>
-            <path d="M8 5L4 8.5L4 15.5L8 19L12 15.5L12 8.5L8 5Z" stroke="#10b981" strokeWidth="0.5" fill="none"></path>
+            <rect width="16" height="28" fill="none" />
+            <path d="M8 5L4 8.5L4 15.5L8 19L12 15.5L12 8.5L8 5Z" stroke="#10b981" strokeWidth="0.5" fill="none" />
           </pattern>
-          <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-hex)"></rect>
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-hex)" />
         </svg>
       </div>
 
@@ -102,7 +106,7 @@ export default function AboutPage() {
                 whileTap={{ scale: 0.95 }}
                 className="relative overflow-hidden group inline-block"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl blur-sm opacity-80 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <span className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl blur-sm opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative block bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-xl transition-colors duration-300 font-medium shadow-lg">
                   Get in Touch
                 </span>
@@ -110,16 +114,16 @@ export default function AboutPage() {
             </Link>
           </div>
           <div className="order-1 md:order-2 relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-teal-500/20 rounded-2xl blur-lg"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-teal-500/20 rounded-2xl blur-lg" />
             <motion.div
               whileHover={{ y: -5, boxShadow: "0 25px 50px -12px rgba(16, 185, 129, 0.25)" }}
               transition={{ duration: 0.3 }}
               className="relative h-[300px] md:h-[400px] rounded-2xl overflow-hidden shadow-xl border border-white/50"
             >
-              <Image src="/food.jpg" alt="Nutrition concept" fill className="object-cover" />
+              <Image src="/food.jpg" alt="Healthy food and nutrition concept" fill className="object-cover" />
 
               {/* Overlay gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
 
               {/* Floating elements */}
               <motion.div
@@ -129,20 +133,12 @@ export default function AboutPage() {
               >
                 <Heart className="h-5 w-5 text-accent" />
               </motion.div>
-
-              <motion.div
-                className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 rounded-lg shadow-lg"
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, delay: 1 }}
-              >
-                <Apple className="h-5 w-5 text-accent" />
-              </motion.div>
             </motion.div>
           </div>
         </section>
 
         {/* Team Section with Enhanced Cards */}
-        <section className="mb-20" ref={teamRef}>
+        <section className="mb-20" ref={teamRef} aria-label="Team">
           <div className="text-center mb-12">
             <div className="relative inline-block mb-4">
               <div className="relative bg-white rounded-full p-3">
@@ -158,23 +154,25 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {[
               {
+                id: 1,
                 name: "Olga Grass",
                 role: "Founder",
                 image: "/team/Olga.jpg",
                 bio: "Olga Grass is a Certified Nutritional Practitioner, Registered Nutritional Therapist, and Holistic Health Coach dedicated to empowering clients through personalized nutrition and holistic wellness strategies. With a focus on sustainable, whole-food-based approaches, Olga helps individuals achieve their health goals and embrace lasting lifestyle changes.",
               },
               {
+                id: 2,
                 name: "Alex Kostikov",
                 role: "Founder",
                 image: "/team/Alex.jpg",
                 bio: "Alex Kostikov is a European-trained Medical Doctor, independent researcher with over 25 years of experience, and dedicated health educator. Known for his commitment to advancing health knowledge, Alex combines his medical expertise and research background to educate and empower individuals to make informed health decisions and embrace proactive wellness.",
               },
-            ].map((member, index) => (
+            ].map((member) => (
               <motion.div
-                key={index}
+                key={member.id}
                 initial={{ opacity: 0, y: 40 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
                 whileHover={{ y: -10, scale: 1.02 }}
               >
                 <Card className="overflow-hidden border-0 shadow-lg bg-white/80 backdrop-blur-sm">
@@ -190,14 +188,14 @@ export default function AboutPage() {
                     <motion.div
                       className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-1.5 rounded-lg shadow-lg"
                       animate={{ y: [0, -5, 0] }}
-                      transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, delay: index * 1.5 }}
+                      transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, delay: 1.5 }}
                     >
                       <Heart className="h-4 w-4 text-accent" />
                     </motion.div>
                   </div>
                   <CardContent className="pt-6 relative">
                     {/* Decorative line */}
-                    <div className="absolute top-0 left-6 w-12 h-1 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full"></div>
+                    <div className="absolute top-0 left-6 w-12 h-1 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full" />
 
                     <h3 className="font-bold text-lg">{member.name}</h3>
                     <p className="text-sm text-accent font-medium mb-2">{member.role}</p>
@@ -210,7 +208,7 @@ export default function AboutPage() {
         </section>
 
         {/* Values Section with Enhanced Cards */}
-        <section className="mb-20" ref={valuesRef}>
+        <section className="mb-20" ref={valuesRef} aria-label="Values">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={isValuesInView ? { opacity: 1, y: 0 } : {}}
@@ -219,7 +217,7 @@ export default function AboutPage() {
           >
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-5">
-              <svg width="100%" height="100%">
+              <svg width="100%" height="100%" aria-hidden="true">
                 <pattern
                   id="pattern-circles-values"
                   x="0"
@@ -231,7 +229,7 @@ export default function AboutPage() {
                 >
                   <circle cx="10" cy="10" r="1.5" fill="#10b981" />
                 </pattern>
-                <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-circles-values)"></rect>
+                <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-circles-values)" />
               </svg>
             </div>
 
@@ -251,47 +249,53 @@ export default function AboutPage() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
                   {
+                    id: 1,
                     title: "Health First",
                     description:
                       "Everything we do is grounded in our commitment to better physical, mental, and nutritional well-being through education and guidance.",
                     icon: <Heart className="h-6 w-6 text-white" />,
                   },
                   {
+                    id: 2,
                     title: "Clarity",
                     description:
                       "Whether it's through interactive courses or real-time AI chats, we break down complex health topics into clear, actionable insights.",
                     icon: <BookOpen className="h-6 w-6 text-white" />,
                   },
                   {
+                    id: 3,
                     title: "Trust",
                     description:
                       "Our content and responses are backed by science and created or reviewed by experienced professionals to ensure reliability and integrity.",
                     icon: <CheckCircle className="h-6 w-6 text-white" />,
                   },
                   {
+                    id: 4,
                     title: "Accessibility",
                     description:
                       "We aim to make health knowledge more reachable by offering flexible learning formats and responsive support whether it's through a course or a quick nutrition question.",
                     icon: <Users className="h-6 w-6 text-white" />,
                   },
                   {
+                    id: 5,
                     title: "Empowerment",
                     description:
                       "We equip learners and users with tools to make informed, confident decisions about their health, lifestyle, and nutrition.",
                     icon: <Zap className="h-6 w-6 text-white" />,
                   },
                   {
+                    id: 6,
                     title: "Growth",
                     description:
                       "We're dedicated to continuous improvement—updating our courses, refining our AI, and listening to your feedback to better serve evolving health needs.",
                     icon: <Award className="h-6 w-6 text-white" />,
                   },
-                ].map((value, index) => (
+                ].map((value) => (
                   <motion.div
-                    key={index}
+                    key={value.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={isValuesInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.1 * index }}
+                    transition={{ duration: 0.4, delay: 0.1 }}
                     whileHover={{ y: -10, scale: 1.02, boxShadow: "0 25px 50px -12px rgba(16, 185, 129, 0.25)" }}
                     className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md transition-all duration-300 overflow-hidden border border-gray-100 group"
                   >

@@ -4,6 +4,7 @@ import type { Metadata } from "next"
 import Header from "@/components/Header"
 import { Open_Sans, Playfair_Display } from "next/font/google"
 import PageTransition from "@/components/PageTransition"
+import SessionProviderWrapper from "./SessionProviderWrapper"
 
 // Define the fonts
 const openSans = Open_Sans({
@@ -32,10 +33,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className="bg-primary text-textMain flex min-h-screen flex-col overflow-y-scroll">
-        <Header />
-        <PageTransition>
-          <div className="flex-1 flex flex-col">{children}</div>
-        </PageTransition>
+        <SessionProviderWrapper>
+          <Header />
+          <PageTransition>
+            <div className="flex-1 flex flex-col">{children}</div>
+          </PageTransition>
+        </SessionProviderWrapper>
       </body>
     </html>
   )

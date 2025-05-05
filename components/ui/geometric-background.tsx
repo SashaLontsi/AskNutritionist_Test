@@ -22,6 +22,7 @@ export function GeometricBackground() {
     }
 
     function drawBackground() {
+      if (!canvas || !ctx) return;
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -35,17 +36,19 @@ export function GeometricBackground() {
       ctx.globalAlpha = 0.03
 
       const gridSize = 60
-      for (let x = 0; x < canvas.width; x += gridSize) {
+      for (let x = 0; x < (canvas ? canvas.width : 0); x += gridSize) {
+        if (!ctx) continue;
         ctx.beginPath()
         ctx.moveTo(x, 0)
-        ctx.lineTo(x, canvas.height)
+        ctx.lineTo(x, canvas ? canvas.height : 0)
         ctx.stroke()
       }
 
-      for (let y = 0; y < canvas.height; y += gridSize) {
+      for (let y = 0; y < (canvas ? canvas.height : 0); y += gridSize) {
+        if (!ctx) continue;
         ctx.beginPath()
         ctx.moveTo(0, y)
-        ctx.lineTo(canvas.width, y)
+        ctx.lineTo(canvas ? canvas.width : 0, y)
         ctx.stroke()
       }
 
@@ -55,6 +58,7 @@ export function GeometricBackground() {
       ctx.strokeStyle = "#2A7F62"
 
       for (let i = 0; i < 5; i++) {
+        if (!canvas || !ctx) continue;
         const x1 = Math.random() * canvas.width
         const y1 = 0
         const x2 = Math.random() * canvas.width
@@ -68,6 +72,7 @@ export function GeometricBackground() {
 
       // Draw a few minimal horizontal lines with varying opacity
       for (let i = 0; i < 3; i++) {
+        if (!canvas || !ctx) continue;
         const y = Math.random() * canvas.height
         ctx.globalAlpha = 0.01 + Math.random() * 0.02
         ctx.beginPath()
@@ -103,7 +108,7 @@ export function GeometricBackground() {
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='%232A7F62' fillOpacity='0.3'/%3E%3C/svg%3E")`,
           backgroundSize: "20px 20px",
         }}
-      ></div>
+      />
     </div>
   )
 }

@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-
 import type React from "react"
 import { useState } from "react"
 import { Mail, MessageSquare, User, Send, CheckCircle, MapPin, Phone, Clock } from "lucide-react"
@@ -28,11 +27,27 @@ export default function Contact() {
     e.preventDefault()
     setLoading(true)
 
-    // Simulate form submission
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to send message')
+      }
+
       setSubmitted(true)
-    }, 1500)
+      setForm({ name: "", email: "", message: "" })
+    } catch (error) {
+      console.error('Error:', error)
+      // Handle error appropriately
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -43,11 +58,16 @@ export default function Contact() {
       className="min-h-screen relative"
     >
       {/* Enhanced background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-emerald-50 via-teal-50/30 to-white -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-emerald-50 via-teal-50/30 to-white -z-10" />
 
       {/* Animated wave patterns */}
       <div className="absolute inset-0 overflow-hidden opacity-20 -z-10">
-        <svg className="absolute w-full min-w-[1000px]" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <svg 
+          className="absolute w-full min-w-[1000px]" 
+          viewBox="0 0 1440 320" 
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
           <motion.path
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
@@ -68,7 +88,7 @@ export default function Contact() {
 
       {/* Dotted pattern background */}
       <div className="absolute inset-0 opacity-5 -z-10">
-        <svg width="100%" height="100%">
+        <svg width="100%" height="100%" aria-hidden="true">
           <pattern
             id="pattern-circles"
             x="0"
@@ -80,7 +100,7 @@ export default function Contact() {
           >
             <circle cx="10" cy="10" r="1.5" fill="#10b981" />
           </pattern>
-          <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-circles)"></rect>
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-circles)" />
         </svg>
       </div>
 
@@ -93,7 +113,7 @@ export default function Contact() {
         </div>
         <h1 className="text-4xl font-bold mb-4 font-heading">Get in Touch</h1>
         <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-          Whether you're curious about features, have feedback, or just want to say hi, we'd love to hear from you.
+          Whether you&apos;re curious about features, have feedback, or just want to say hi, we&apos;d love to hear from you.
         </p>
       </section>
 
@@ -189,7 +209,7 @@ export default function Contact() {
                         whileTap={{ scale: 0.98 }}
                         className="relative w-full overflow-hidden group"
                       >
-                        <span className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg blur-sm opacity-80 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <span className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg blur-sm opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
                         <span className="relative flex items-center justify-center w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-3 px-4 rounded-lg transition-colors duration-300 font-medium">
                           {loading ? (
                             <>
@@ -198,6 +218,7 @@ export default function Contact() {
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
+                                aria-hidden="true"
                               >
                                 <circle
                                   className="opacity-25"
@@ -206,12 +227,12 @@ export default function Contact() {
                                   r="10"
                                   stroke="currentColor"
                                   strokeWidth="4"
-                                ></circle>
+                                />
                                 <path
                                   className="opacity-75"
                                   fill="currentColor"
                                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
+                                />
                               </svg>
                               Sending...
                             </>
@@ -267,12 +288,12 @@ export default function Contact() {
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-gray-100">
               <h3 className="text-2xl font-semibold mb-6 relative inline-block">
                 Contact Information
-                <span className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-500"></span>
+                <span className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-500" />
               </h3>
               <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="relative mr-4">
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-sm opacity-30"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-sm opacity-30" />
                     <div className="relative bg-accentLight rounded-full p-2">
                       <MapPin className="h-6 w-6 text-accent" />
                     </div>
@@ -285,7 +306,7 @@ export default function Contact() {
 
                 <div className="flex items-start">
                   <div className="relative mr-4">
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-sm opacity-30"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-sm opacity-30" />
                     <div className="relative bg-accentLight rounded-full p-2">
                       <Mail className="h-6 w-6 text-accent" />
                     </div>
@@ -299,7 +320,7 @@ export default function Contact() {
 
                 <div className="flex items-start">
                   <div className="relative mr-4">
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-sm opacity-30"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-sm opacity-30" />
                     <div className="relative bg-accentLight rounded-full p-2">
                       <Phone className="h-6 w-6 text-accent" />
                     </div>
@@ -317,7 +338,7 @@ export default function Contact() {
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-gray-100">
               <div className="flex items-center mb-6">
                 <div className="relative mr-3">
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-sm opacity-30"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-sm opacity-30" />
                   <div className="relative bg-accentLight rounded-full p-2">
                     <Clock className="h-6 w-6 text-accent" />
                   </div>
@@ -345,7 +366,7 @@ export default function Contact() {
               whileHover={{ y: -5, boxShadow: "0 25px 50px -12px rgba(16, 185, 129, 0.25)" }}
               className="relative overflow-hidden rounded-2xl shadow-lg"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-600" />
 
               {/* Animated background elements */}
               <div className="absolute inset-0 overflow-hidden">
@@ -359,7 +380,7 @@ export default function Contact() {
                     ease: "linear",
                   }}
                   className="absolute top-[10%] left-[10%] w-[30%] h-[30%] rounded-full bg-white/5"
-                ></motion.div>
+                />
                 <motion.div
                   animate={{
                     rotate: -360,
@@ -370,7 +391,7 @@ export default function Contact() {
                     ease: "linear",
                   }}
                   className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] rounded-full bg-white/5"
-                ></motion.div>
+                />
               </div>
 
               <div className="relative p-8 text-white">
@@ -381,7 +402,7 @@ export default function Contact() {
                 <Link href="/chat">
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-white/20 rounded-lg blur-md"></div>
+                      <div className="absolute inset-0 bg-white/20 rounded-lg blur-md" />
                       <span className="relative block bg-white text-accent hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition-colors duration-300 shadow-lg">
                         Chat with AI Now
                       </span>

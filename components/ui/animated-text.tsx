@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion, useAnimation, type Variants } from "framer-motion"
+import { motion, useAnimation } from "framer-motion"
+import type { Variants } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef } from "react"
 import { cn } from "@/lib/utils"
@@ -181,7 +182,7 @@ export function AnimatedText({ text, className, once = true, repeatDelay = 0, an
       <span className={cn("inline-block", className)}>
         {text.split("").map((char, index) => (
           <motion.span
-            key={`${char}-${index}`}
+            key={`${char}-${index}-${text.length}-${text.charCodeAt(index)}`}
             ref={index === 0 ? ref : null}
             custom={index}
             initial="hidden"

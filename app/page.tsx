@@ -40,7 +40,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center">
+      <section className="relative min-h-[70vh] flex items-center" aria-label="Hero Section">
         <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6 grid md:grid-cols-2 gap-12 items-center py-20">
           <div className="text-center md:text-left">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -87,9 +87,9 @@ export default function Home() {
             <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl overflow-hidden border border-accent/20">
               <div className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-red-400 mr-2" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400 mr-2" />
+                  <div className="w-3 h-3 rounded-full bg-green-400" />
                 </div>
                 <div className="space-y-4">
                   <motion.div
@@ -128,7 +128,7 @@ export default function Home() {
       </section>
 
       {/* Features Section - Simplified */}
-      <section className="py-16 relative overflow-hidden bg-accent/5">
+      <section className="py-16 relative overflow-hidden bg-accent/5" aria-label="Features Section">
         <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
             <div className="inline-block mb-4">
@@ -145,19 +145,19 @@ export default function Home() {
       </section>
 
       {/* Testimonials Slider Section */}
-      <section className="py-16 relative overflow-hidden bg-white">
+      <section className="py-16 relative overflow-hidden bg-white" aria-label="Testimonials Section">
         <TestimonialSlider />
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden" aria-label="FAQ Section">
         <SimpleFaq />
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden" aria-label="Final CTA Section">
         {/* Background gradient */}
-        <div className="absolute inset-0 z-0 bg-accent"></div>
+        <div className="absolute inset-0 z-0 bg-accent" />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
           <motion.div

@@ -14,12 +14,14 @@ export function VibrantBackground() {
 
     // Set canvas dimensions
     const resizeCanvas = () => {
+      if (!canvas) return
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       drawBackground()
     }
 
     function drawBackground() {
+      if (!canvas || !ctx) return
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -65,7 +67,7 @@ export function VibrantBackground() {
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-20" />
 
       {/* Solid color background as fallback and base */}
-      <div className="absolute inset-0 bg-gradient-to-b from-accent/30 to-secondaryLight/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-accent/30 to-secondaryLight/50" />
     </div>
   )
 }

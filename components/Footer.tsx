@@ -1,89 +1,30 @@
 import Link from "next/link"
-import { Leaf, Mail, Instagram, Twitter, Facebook } from "lucide-react"
+import { Leaf, Mail } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <Leaf className="h-6 w-6 text-accent" />
-              <span className="font-heading text-xl font-bold text-accent">AskNutritionist</span>
-            </div>
-            <p className="text-textLight mb-4 max-w-md">
-              Your AI-powered platform for personalized health and nutrition guidance. Get science-backed insights to
-              help you make informed decisions about your health.
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-textLight hover:text-accent transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-textLight hover:text-accent transition-colors">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-textLight hover:text-accent transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="mailto:contact@asknutritionist.com"
-                className="text-textLight hover:text-accent transition-colors"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-heading text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-textLight hover:text-accent transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-textLight hover:text-accent transition-colors">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/ask" className="text-textLight hover:text-accent transition-colors">
-                  Ask AI
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-textLight hover:text-accent transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-heading text-lg font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="text-textLight hover:text-accent transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-textLight hover:text-accent transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-textLight hover:text-accent transition-colors">
-                  Cookie Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
+    <footer className="bg-white/90 border-t border-accent/10 py-8 mt-12">
+      <div className="max-w-3xl mx-auto px-4 flex flex-col items-center gap-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Leaf className="h-6 w-6 text-accent" />
+          <span className="font-heading text-xl font-bold text-accent">AskNutritionist</span>
         </div>
-
-        <div className="border-t mt-12 pt-8 text-center text-textLight">
-          <p>&copy; {new Date().getFullYear()} AskNutritionist. All rights reserved.</p>
+        <nav className="flex flex-wrap justify-center gap-6 text-sm text-textLight mb-2">
+          <Link href="/" className="hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors">Home</Link>
+          <Link href="/about" className="hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors">About</Link>
+          <Link href="/ask" className="hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors">Ask AI</Link>
+          <Link href="/contact" className="hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors">Contact</Link>
+          <Link href="/privacy-policy" className="hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors">Privacy Policy</Link>
+          <Link href="/terms-of-service" className="hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors">Terms of Service</Link>
+          <Link href="/cookie-policy" className="hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors">Cookie Policy</Link>
+        </nav>
+        <div className="flex items-center gap-4 mb-2">
+          <a href="mailto:contact@asknutritionist.com" className="text-textLight hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors" aria-label="Email">
+            <Mail className="h-5 w-5" />
+          </a>
+        </div>
+        <div className="text-xs text-textLight text-center">
+          &copy; {new Date().getFullYear()} AskNutritionist. All rights reserved.
         </div>
       </div>
     </footer>

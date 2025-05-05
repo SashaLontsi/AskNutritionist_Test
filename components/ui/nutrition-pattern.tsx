@@ -14,16 +14,16 @@ export function NutritionPattern() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       {/* Base gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/20 to-white"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/20 to-white" />
 
       {/* Nutrition-themed patterns */}
-      <div className="absolute inset-0 nutrition-pattern opacity-30"></div>
-      <div className="absolute inset-0 leaf-pattern opacity-20"></div>
-      <div className="absolute inset-0 fruit-pattern opacity-25"></div>
+      <div className="absolute inset-0 nutrition-pattern opacity-30" />
+      <div className="absolute inset-0 leaf-pattern opacity-20" />
+      <div className="absolute inset-0 fruit-pattern opacity-25" />
 
       {/* Accent areas */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-bl-full opacity-40"></div>
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-blue-50 to-indigo-50 rounded-tr-full opacity-40"></div>
+      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-bl-full opacity-40" />
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-blue-50 to-indigo-50 rounded-tr-full opacity-40" />
     </div>
   )
 }

@@ -1,0 +1,5 @@
+# OpenAI API Key (for chat and Q&A)
+OPENAI_API_KEY=***REMOVED***proj-IsZmVTx2BGumQYY2Kjii--U4DI-H5YlOVm2818lG30DZj33OVOHyPv8X5qkEWAOkwZerzM1Er-T3BlbkFJDp8iRHqv6-aTpzRTJ45hnLJfK-lhA60bCBSqIK0_LrsQzCp7g80HRJIan5rXUE0FIacrt8TL0A
+
+# USDA FoodData Central API Key (for nutrition data)
+USDA_API_KEY=9nNOd4Inu7DS4hUosP3Z9Oaq3eZNE1iPTEatXhyu

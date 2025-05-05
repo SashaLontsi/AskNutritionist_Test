@@ -24,7 +24,7 @@ export function RevealSection({
   threshold = 0.2,
 }: RevealSectionProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once, threshold })
+  const isInView = useInView(ref, { once })
 
   const getInitialPosition = () => {
     switch (direction) {

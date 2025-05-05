@@ -16,12 +16,14 @@ export function StylishBackground() {
 
     // Set canvas dimensions
     const resizeCanvas = () => {
+      if (!canvas) return;
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       drawBackground()
     }
 
     function drawBackground() {
+      if (!canvas || !ctx) return;
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -43,7 +45,8 @@ export function StylishBackground() {
         ctx.beginPath()
         ctx.moveTo(0, y)
 
-        for (let x = 0; x < canvas.width; x += 20) {
+        for (let x = 0; x < (canvas ? canvas.width : 0); x += 20) {
+          if (!ctx) continue;
           const amplitude = stripeHeight * 0.2
           const frequency = 0.01
           const phase = Date.now() * 0.001 + i
@@ -61,6 +64,7 @@ export function StylishBackground() {
       ctx.globalAlpha = 0.05
 
       for (let i = 0; i < circleCount; i++) {
+        if (!canvas || !ctx) continue;
         const x = Math.random() * canvas.width
         const y = Math.random() * canvas.height
         const radius = Math.random() * 100 + 50
@@ -81,6 +85,7 @@ export function StylishBackground() {
       ctx.lineWidth = 1
 
       for (let i = 0; i < 20; i++) {
+        if (!canvas || !ctx) continue;
         const x1 = Math.random() * canvas.width
         const y1 = 0
         const x2 = Math.random() * canvas.width
@@ -119,7 +124,7 @@ export function StylishBackground() {
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%232A7F62' fillOpacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
-      ></div>
+      />
     </div>
   )
 }

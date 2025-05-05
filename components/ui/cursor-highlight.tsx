@@ -36,7 +36,7 @@ export function CursorHighlight() {
       }}
       transition={{ type: "spring", damping: 30, stiffness: 200 }}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 dark:from-emerald-500/5 dark:to-teal-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 dark:from-emerald-500/5 dark:to-teal-500/5 rounded-full blur-3xl" />
     </motion.div>
   )
 }

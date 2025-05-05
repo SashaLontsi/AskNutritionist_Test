@@ -18,13 +18,13 @@ export default function Footer() {
               help you make informed decisions about your health.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-textLight hover:text-accent transition-colors">
+              <a href="https://twitter.com/" className="text-textLight hover:text-accent transition-colors" target="_blank" rel="noopener noreferrer">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-textLight hover:text-accent transition-colors">
+              <a href="https://facebook.com/" className="text-textLight hover:text-accent transition-colors" target="_blank" rel="noopener noreferrer">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-textLight hover:text-accent transition-colors">
+              <a href="https://instagram.com/" className="text-textLight hover:text-accent transition-colors" target="_blank" rel="noopener noreferrer">
                 <Instagram className="h-5 w-5" />
               </a>
               <a
@@ -66,17 +66,17 @@ export default function Footer() {
             <h3 className="font-heading text-lg font-semibold mb-4 text-accent">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#" className="text-textLight hover:text-accent transition-colors">
+                <Link href="/privacy-policy" className="text-textLight hover:text-accent transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-textLight hover:text-accent transition-colors">
+                <Link href="/terms-of-service" className="text-textLight hover:text-accent transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-textLight hover:text-accent transition-colors">
+                <Link href="/cookie-policy" className="text-textLight hover:text-accent transition-colors">
                   Cookie Policy
                 </Link>
               </li>

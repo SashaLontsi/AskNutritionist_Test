@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, Star } from "lucide-react"
 
@@ -130,10 +130,10 @@ export default function TestimonialSlider() {
     }),
   }
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setDirection(1)
     setCurrentIndex((prevIndex) => (prevIndex + 1) % 3)
-  }
+  }, [])
 
   const handlePrevious = () => {
     setDirection(-1)
@@ -152,7 +152,7 @@ export default function TestimonialSlider() {
         clearInterval(intervalRef.current)
       }
     }
-  }, [isPaused, currentIndex])
+  }, [isPaused, handleNext])
 
   const visibleTestimonials = testimonials.filter((t) => t.slide === currentIndex % 3)
 
@@ -166,6 +166,7 @@ export default function TestimonialSlider() {
         <h2 className="text-3xl font-bold text-accent font-heading">What Our Users Say</h2>
         <div className="flex space-x-2">
           <button
+            type="button"
             onClick={handlePrevious}
             className="p-2 rounded-full bg-white border border-accent/20 text-accent hover:bg-accent/5 transition-colors"
             aria-label="Previous testimonial"
@@ -173,6 +174,7 @@ export default function TestimonialSlider() {
             <ChevronLeft className="h-5 w-5" />
           </button>
           <button
+            type="button"
             onClick={handleNext}
             className="p-2 rounded-full bg-white border border-accent/20 text-accent hover:bg-accent/5 transition-colors"
             aria-label="Next testimonial"
@@ -184,9 +186,9 @@ export default function TestimonialSlider() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 overflow-hidden">
         <AnimatePresence mode="wait" custom={direction}>
-          {visibleTestimonials.map((testimonial, index) => (
+          {visibleTestimonials.map((testimonial) => (
             <motion.div
-              key={`${testimonial.id}-${index}`}
+              key={testimonial.id}
               custom={direction}
               variants={slideVariants}
               initial={direction > 0 ? "hiddenRight" : "hiddenLeft"}
@@ -208,7 +210,7 @@ export default function TestimonialSlider() {
               <div className="flex mb-2">
                 {[...Array(5)].map((_, i) => (
                   <Star
-                    key={i}
+                    key={`${testimonial.id}-star-${i}`}
                     className={`h-4 w-4 ${i < testimonial.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
                   />
                 ))}
@@ -221,17 +223,22 @@ export default function TestimonialSlider() {
 
       {/* Pagination dots */}
       <div className="flex justify-center mt-8 space-x-2">
-        {[0, 1, 2].map((index) => (
+        {[
+          { id: 'dot-0', value: 0 },
+          { id: 'dot-1', value: 1 },
+          { id: 'dot-2', value: 2 }
+        ].map((dot) => (
           <button
-            key={index}
+            type="button"
+            key={dot.id}
             onClick={() => {
-              setDirection(index > currentIndex % 3 ? 1 : -1)
-              setCurrentIndex(index)
+              setDirection(dot.value > currentIndex % 3 ? 1 : -1)
+              setCurrentIndex(dot.value)
             }}
             className={`w-2.5 h-2.5 rounded-full transition-colors ${
-              index === currentIndex % 3 ? "bg-accent" : "bg-accent/20"
+              dot.value === currentIndex % 3 ? "bg-accent" : "bg-accent/20"
             }`}
-            aria-label={`Go to testimonial slide ${index + 1}`}
+            aria-label={`Go to testimonial slide ${dot.value + 1}`}
           />
         ))}
       </div>

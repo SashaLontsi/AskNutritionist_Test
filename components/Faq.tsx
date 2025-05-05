@@ -62,7 +62,7 @@ export default function Faq({ staggered = false }: FaqProps) {
           className="inline-block mb-4"
         >
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-md opacity-70"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-md opacity-70" />
             <div className="relative bg-white dark:bg-gray-800 rounded-full p-3 shadow-md">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +73,9 @@ export default function Faq({ staggered = false }: FaqProps) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className="h-6 w-6 text-accent"
+                aria-labelledby="faqIconTitle"
               >
+                <title id="faqIconTitle">Help Icon</title>
                 <circle cx="12" cy="12" r="10" />
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
@@ -104,7 +106,7 @@ export default function Faq({ staggered = false }: FaqProps) {
       <div className="space-y-4">
         {faqs.map((faq, index) => (
           <motion.div
-            key={index}
+            key={faq.question}
             initial={staggered ? { opacity: 0, y: 20 } : { opacity: 1 }}
             whileInView={staggered ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.4, delay: staggered ? index * 0.1 : 0 }}

@@ -40,7 +40,7 @@ export function NatureBackground() {
             top: `${startPositionY}px`,
             width: `${leafSize}px`,
             height: `${leafSize}px`,
-            "--fall-duration": `${fallDuration}s`,
+            ...({ '--fall-duration': `${fallDuration}s` } as React.CSSProperties),
             animationDelay: `${delay}s`,
             transform: `rotate(${rotation}deg)`,
           }}
@@ -66,7 +66,7 @@ export function NatureBackground() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       {/* Wave pattern background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50" />
       <div className="absolute bottom-0 left-0 w-full">
         <Image src="/wave-pattern.svg" alt="Wave pattern" width={1440} height={320} className="w-full" />
       </div>
@@ -78,11 +78,11 @@ export function NatureBackground() {
           backgroundImage: `url('/circle-pattern.svg')`,
           backgroundSize: "30px 30px",
         }}
-      ></div>
+      />
 
       {/* Subtle gradient overlays */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-accent/5 to-secondary/5 rounded-bl-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-accent/5 to-secondary/5 rounded-tr-full blur-3xl"></div>
+      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-accent/5 to-secondary/5 rounded-bl-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-accent/5 to-secondary/5 rounded-tr-full blur-3xl" />
 
       {/* Falling leaves */}
       {leaves}

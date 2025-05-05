@@ -13,6 +13,7 @@ export function AnimatedFoodIcons() {
   return (
     <div className="fixed inset-0 -z-5 overflow-hidden pointer-events-none opacity-10">
       <svg ref={svgRef} width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <title>Animated food icons pattern</title>
         <defs>
           <pattern id="food-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
             {/* Apple */}

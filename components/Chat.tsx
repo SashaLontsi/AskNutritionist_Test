@@ -1,10 +1,11 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import { PaperPlaneIcon, StopIcon } from "@radix-ui/react-icons"
 import { motion, AnimatePresence } from "framer-motion"
 import { MessageSquare, Sparkles, Clock, X, History, Trash } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 type Message = {
   id: string
@@ -14,85 +15,103 @@ type Message = {
 }
 
 type Conversation = {
-  id: string
+  id?: string // local id for new conversations
+  _id?: string // MongoDB id for saved conversations
   title: string
   preview: string
   messages: Message[]
   timestamp: Date
+  createdAt?: string | Date
+}
+
+type EditHistory = {
+  content: string
+  editedAt: string | Date
 }
 
 export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () => void }) {
+  const { data: session } = useSession()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
-  const [conversations, setConversations] = useState<Conversation[]>([
-    {
-      id: "1",
-      title: "Protein Sources",
-      preview: "What are good sources of protein?",
-      messages: [
-        {
-          id: "1-1",
-          role: "user",
-          content: "What are good sources of protein?",
-          timestamp: new Date(Date.now() - 86400000 * 2), // 2 days ago
-        },
-        {
-          id: "1-2",
-          role: "assistant",
-          content:
-            "Good sources of protein include lean meats, fish, eggs, dairy, legumes, nuts, and seeds. Plant-based options like tofu, tempeh, and seitan are excellent for vegetarians and vegans.",
-          timestamp: new Date(Date.now() - 86400000 * 2),
-        },
-      ],
-      timestamp: new Date(Date.now() - 86400000 * 2),
-    },
-    {
-      id: "2",
-      title: "Weight Loss Tips",
-      preview: "How can I lose weight in a healthy way?",
-      messages: [
-        {
-          id: "2-1",
-          role: "user",
-          content: "How can I lose weight in a healthy way?",
-          timestamp: new Date(Date.now() - 86400000), // 1 day ago
-        },
-        {
-          id: "2-2",
-          role: "assistant",
-          content:
-            "Sustainable weight loss typically involves a balanced diet with a moderate calorie deficit, regular physical activity, adequate sleep, and stress management. Focus on whole foods, plenty of vegetables, lean proteins, and staying hydrated.",
-          timestamp: new Date(Date.now() - 86400000),
-        },
-      ],
-      timestamp: new Date(Date.now() - 86400000),
-    },
-  ])
+  const [conversations, setConversations] = useState<Conversation[]>([])
   const [currentConversation, setCurrentConversation] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editTitle, setEditTitle] = useState<string>("")
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+  const limit = 10
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
-  const bottomRef = useRef<HTMLDivElement | null>(null)
-  const chatContainerRef = useRef<HTMLDivElement | null>(null)
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null)
+  const [editMessageContent, setEditMessageContent] = useState<string>("")
+  const [showHistoryFor, setShowHistoryFor] = useState<string | null>(null)
+  const [loadingConversations, setLoadingConversations] = useState(false)
+  const [toast, setToast] = useState<{ type: 'success' | 'error', message: string } | null>(null)
+  const [showDeleteId, setShowDeleteId] = useState<string | null>(null)
 
   useEffect(() => {
-    // Only scroll to bottom when messages change
     if (messages.length > 0) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" })
     }
   }, [messages])
 
-  // This effect ensures the chat container is visible when the component mounts
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
     }
   }, [])
 
-  const handleSubmit = (e: React.FormEvent | React.KeyboardEvent) => {
+  const fetchConversations = useCallback(async (pageNum = 1) => {
+    if (!session) return
+    setLoadingConversations(true)
+    try {
+      const res = await fetch(`/api/chat-history?page=${pageNum}&limit=${limit}`)
+      const data = await res.json()
+      if (pageNum === 1) {
+        setConversations(
+          Array.isArray(data.conversations)
+            ? data.conversations.map((conv: Conversation) => ({
+                ...conv,
+                id: conv._id || conv.id,
+                timestamp: conv.createdAt ? new Date(conv.createdAt) : new Date(),
+              }))
+            : []
+        )
+      } else {
+        setConversations((prev) => [
+          ...prev,
+          ...(Array.isArray(data.conversations)
+            ? data.conversations.map((conv: Conversation) => ({
+                ...conv,
+                id: conv._id || conv.id,
+                timestamp: conv.createdAt ? new Date(conv.createdAt) : new Date(),
+              }))
+            : []),
+        ])
+      }
+      setHasMore(pageNum < data.totalPages)
+    } catch (err) {
+      setToast({ type: 'error', message: 'Failed to fetch conversations.' })
+    } finally {
+      setLoadingConversations(false)
+    }
+  }, [session])
+
+  useEffect(() => {
+    if (session) {
+      setPage(1)
+      fetchConversations(1)
+    }
+  }, [session, fetchConversations])
+
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault()
     if (!input.trim() || isLoading) return
 
@@ -115,62 +134,91 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
     setIsLoading(true)
     setIsTyping(true)
 
-    // Generate a response based on the input
-    const fullReply = generateResponse(input)
-    const replyId = (Date.now() + 1).toString()
+    try {
+      const response = await fetch('/api/smart-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: input }),
+      })
 
-    // Add empty message first to show typing indicator
-    setMessages((prev) => [...prev, { id: replyId, role: "assistant", content: "", timestamp: new Date() }])
+      if (!response.ok) {
+        throw new Error('Failed to get response from server')
+      }
 
-    // Simulate typing with a delay
-    setTimeout(() => {
-      let i = 0
-      intervalRef.current = setInterval(() => {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === replyId ? { ...msg, content: fullReply.slice(0, i + 1), timestamp: new Date() } : msg,
-          ),
-        )
-        i++
-        if (i === fullReply.length) {
-          clearInterval(intervalRef.current!)
-          intervalRef.current = null
-          setIsLoading(false)
-          setIsTyping(false)
+      const data = await response.json()
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: data.reply,
+        timestamp: new Date(),
+      }
 
-          // Save conversation to history
-          if (!currentConversation) {
-            const newConversationId = Date.now().toString()
-            const newConversation: Conversation = {
-              id: newConversationId,
-              title: input.length > 20 ? input.substring(0, 20) + "..." : input,
-              preview: input,
-              messages: [userMessage, { id: replyId, role: "assistant", content: fullReply, timestamp: new Date() }],
-              timestamp: new Date(),
-            }
-            setConversations((prev) => [newConversation, ...prev])
-            setCurrentConversation(newConversationId)
-          } else {
-            setConversations((prev) =>
-              prev.map((conv) => {
-                if (conv.id === currentConversation) {
-                  return {
-                    ...conv,
-                    messages: [
-                      ...conv.messages,
-                      userMessage,
-                      { id: replyId, role: "assistant", content: fullReply, timestamp: new Date() },
-                    ],
-                    timestamp: new Date(),
-                  }
-                }
-                return conv
-              }),
-            )
-          }
+      setMessages((prev) => [...prev, assistantMessage])
+
+      if (!currentConversation) {
+        const newConversationId = Date.now().toString()
+        // Auto-generate title from first user message
+        const autoTitle = input.trim().length > 0 ? input.trim().slice(0, 30) : "New Conversation"
+        const newConversation: Conversation = {
+          id: newConversationId,
+          title: autoTitle,
+          preview: input,
+          messages: [userMessage, assistantMessage],
+          timestamp: new Date(),
         }
-      }, 8)
-    }, 500)
+        setConversations((prev) => [newConversation, ...prev])
+        setCurrentConversation(newConversationId)
+        // Save to backend
+        if (session) {
+          fetch("/api/chat-history", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: newConversation.title,
+              messages: newConversation.messages,
+            }),
+          })
+            .then((res) => res.json())
+            .then((saved) => {
+              setConversations((prev) => prev.map((conv) =>
+                conv.id === newConversationId && saved._id
+                  ? { ...conv, _id: saved._id, id: saved._id }
+                  : conv
+              ))
+              setCurrentConversation(saved._id)
+              setToast({ type: 'success', message: 'Conversation saved!' })
+            })
+            .catch((err) => setToast({ type: 'error', message: 'Failed to save conversation.' }))
+        }
+      } else {
+        setConversations((prev) =>
+          prev.map((conv) => {
+            if (conv.id === currentConversation) {
+              return {
+                ...conv,
+                messages: [...conv.messages, userMessage, assistantMessage],
+                timestamp: new Date(),
+              }
+            }
+            return conv
+          }),
+        )
+      }
+    } catch (error) {
+      setToast({ type: 'error', message: 'Failed to get response from server.' })
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "I apologize, but I'm having trouble connecting to the server. Please try again later.",
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+      setIsTyping(false)
+    }
   }
 
   const handleStop = () => {
@@ -183,7 +231,7 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
   }
 
   const loadConversation = (conversationId: string) => {
-    const conversation = conversations.find((conv) => conv.id === conversationId)
+    const conversation = conversations.find((conv) => conv.id === conversationId || conv._id === conversationId)
     if (conversation) {
       setMessages(conversation.messages)
       setCurrentConversation(conversationId)
@@ -199,42 +247,27 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
 
   const deleteConversation = (conversationId: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    setConversations((prev) => prev.filter((conv) => conv.id !== conversationId))
+    setShowDeleteId(conversationId)
+  }
+
+  const confirmDeleteConversation = (conversationId: string) => {
+    setConversations((prev) => prev.filter((conv) => (conv.id || conv._id) !== conversationId))
     if (currentConversation === conversationId) {
       setMessages([])
       setCurrentConversation(null)
     }
-  }
-
-  // Function to generate responses based on input
-  const generateResponse = (userInput: string): string => {
-    const input = userInput.toLowerCase()
-
-    if (input.includes("hello") || input.includes("hi") || input.includes("hey")) {
-      return "Hello! I'm your nutrition assistant. How can I help you today?"
+    // Delete from backend if _id is present
+    const conv = conversations.find((c) => (c.id || c._id) === conversationId)
+    const backendId = conv?._id || conv?.id
+    if (backendId) {
+      fetch(`/api/chat-history?id=${backendId}`, {
+        method: "DELETE",
+      })
+        .then((res) => res.json())
+        .then(() => setToast({ type: 'success', message: 'Conversation deleted.' }))
+        .catch((err) => setToast({ type: 'error', message: 'Failed to delete conversation.' }))
     }
-
-    if (input.includes("protein") || input.includes("proteins")) {
-      return "Good sources of protein include lean meats, fish, eggs, dairy, legumes, nuts, and seeds. Plant-based options like tofu, tempeh, and seitan are excellent for vegetarians and vegans. For optimal health, aim to include a variety of protein sources in your diet."
-    }
-
-    if (input.includes("weight loss") || input.includes("lose weight")) {
-      return "Sustainable weight loss typically involves a balanced diet with a moderate calorie deficit, regular physical activity, adequate sleep, and stress management. Focus on whole foods, plenty of vegetables, lean proteins, and staying hydrated. Remember that healthy weight loss is usually gradual, around 1-2 pounds per week."
-    }
-
-    if (input.includes("vitamin") || input.includes("mineral")) {
-      return "Vitamins and minerals are essential micronutrients. A varied diet with plenty of fruits, vegetables, whole grains, and proteins usually provides adequate amounts. Specific deficiencies may require targeted foods or supplements. If you're concerned about a specific vitamin or mineral, please ask and I can provide more detailed information."
-    }
-
-    if (input.includes("meal plan") || input.includes("diet plan")) {
-      return "A balanced meal plan typically includes a variety of foods from all food groups: fruits, vegetables, whole grains, lean proteins, and healthy fats. Portion control is also important. Would you like me to suggest a sample meal plan based on specific dietary preferences or goals?"
-    }
-
-    return (
-      "Thank you for your question about " +
-      userInput +
-      ". To provide you with the most accurate nutrition advice, I'd need a bit more information. Could you please elaborate on your specific concerns or goals? I'm here to help with personalized nutrition guidance."
-    )
+    setShowDeleteId(null)
   }
 
   const formatDate = (date: Date) => {
@@ -243,11 +276,91 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
 
     if (diffInDays === 0) {
       return "Today"
-    } else if (diffInDays === 1) {
-      return "Yesterday"
-    } else {
-      return date.toLocaleDateString()
     }
+    if (diffInDays === 1) {
+      return "Yesterday"
+    }
+    return date.toLocaleDateString()
+  }
+
+  const handleEditTitle = (convId: string, currentTitle: string) => {
+    setEditingId(convId)
+    setEditTitle(currentTitle)
+  }
+
+  const saveEditTitle = async (convId: string) => {
+    const res = await fetch("/api/chat-history", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: convId, title: editTitle }),
+    })
+    if (res.ok) {
+      setConversations((prev) =>
+        prev.map((conv) =>
+          (conv.id || conv._id) === convId ? { ...conv, title: editTitle } : conv
+        )
+      )
+      setEditingId(null)
+    }
+  }
+
+  const handleEditMessage = (msgId: string, content: string) => {
+    setEditingMessageId(msgId)
+    setEditMessageContent(content)
+  }
+
+  const saveEditMessage = async (msgId: string) => {
+    if (!currentConversation) return
+    const res = await fetch("/api/chat-history", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: currentConversation,
+        messageId: msgId,
+        newContent: editMessageContent,
+      }),
+    })
+    if (res.ok) {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === msgId ? { ...msg, content: editMessageContent } : msg
+        )
+      )
+      setEditingMessageId(null)
+    }
+  }
+
+  // Export chat history
+  const exportChatHistory = () => {
+    const dataStr = JSON.stringify(conversations, null, 2)
+    const blob = new Blob([dataStr], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'chat-history.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  // Import chat history
+  const importChatHistory = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target?.result as string)
+        if (Array.isArray(imported)) {
+          setConversations(imported)
+          setToast({ type: 'success', message: 'Chat history imported!' })
+        } else {
+          setToast({ type: 'error', message: 'Invalid file format.' })
+        }
+      } catch {
+        setToast({ type: 'error', message: 'Failed to import chat history.' })
+      }
+    }
+    reader.readAsText(file)
   }
 
   return (
@@ -258,18 +371,19 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
           {/* Chat header */}
           <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="bg-white rounded-full p-2 shadow-sm">
-                  <MessageSquare className="h-5 w-5 text-accent" />
+              <div className="flex items-center space-x-2">
+                <div className="bg-green-100 p-2 rounded-full">
+                  <MessageSquare className="h-6 w-6 text-accent" />
                 </div>
-              </div>
-              <div>
-                <h2 className="font-medium text-gray-900">Nutrition Assistant</h2>
-                <p className="text-xs text-gray-500">Powered by AI</p>
+                <div>
+                  <h2 className="text-base font-semibold leading-tight">Nutrition Assistant</h2>
+                  <p className="text-xs text-gray-400 leading-tight">Powered by AI</p>
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-3">
               <button
+                type="button"
                 onClick={() => setShowHistory(!showHistory)}
                 className="flex items-center space-x-1 text-xs text-gray-500 hover:text-accent transition-colors p-1 rounded-md hover:bg-gray-100"
               >
@@ -277,7 +391,7 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
                 <span>History</span>
               </button>
               <div className="flex items-center space-x-1">
-                <span className="inline-flex h-2 w-2 rounded-full bg-green-400"></span>
+                <span className="inline-flex h-2 w-2 rounded-full bg-green-400" />
                 <span className="text-xs text-gray-500">Online</span>
               </div>
             </div>
@@ -297,6 +411,7 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
                   <div className="p-3 border-b border-gray-100 flex justify-between items-center">
                     <h3 className="font-medium text-sm">Chat History</h3>
                     <button
+                      type="button"
                       onClick={() => setShowHistory(false)}
                       className="text-gray-400 hover:text-gray-600 transition-colors"
                     >
@@ -305,39 +420,83 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
                   </div>
                   <div className="p-2">
                     <button
+                      type="button"
                       onClick={startNewConversation}
                       className="w-full p-2 mb-3 text-sm text-left rounded-lg bg-accent text-white flex items-center space-x-2"
                     >
                       <Sparkles className="h-4 w-4" />
                       <span>New Conversation</span>
                     </button>
+                    {loadingConversations && (
+                      <div className="flex justify-center items-center py-2">
+                        <span className="loader border-2 border-gray-300 border-t-accent rounded-full w-6 h-6 animate-spin" />
+                      </div>
+                    )}
                     <div className="space-y-2 max-h-[calc(50vh-100px)] overflow-y-auto">
                       {conversations.map((conversation) => (
-                        <div
-                          key={conversation.id}
-                          onClick={() => loadConversation(conversation.id)}
-                          className={`p-2 rounded-lg text-sm cursor-pointer transition-colors flex flex-col ${
+                        <button
+                          type="button"
+                          key={conversation.id || conversation._id || ""}
+                          onClick={() => loadConversation((conversation.id || conversation._id || "") as string)}
+                          onKeyDown={(e) => e.key === 'Enter' && loadConversation((conversation.id || conversation._id || "") as string)}
+                          className={`p-2 rounded-lg text-sm cursor-pointer transition-colors flex flex-col w-full text-left ${
                             currentConversation === conversation.id
                               ? "bg-accent/10 border-l-2 border-accent"
                               : "hover:bg-gray-100"
                           }`}
                         >
                           <div className="flex justify-between items-start">
-                            <div className="font-medium truncate">{conversation.title}</div>
-                            <button
-                              onClick={(e) => deleteConversation(conversation.id, e)}
-                              className="text-gray-400 hover:text-red-500 transition-colors p-1"
-                            >
-                              <Trash className="h-3 w-3" />
-                            </button>
+                            {editingId === (conversation.id || conversation._id) ? (
+                              <>
+                                <input
+                                  value={editTitle}
+                                  onChange={(e) => setEditTitle(e.target.value)}
+                                  className="border rounded px-1 text-sm mr-1"
+                                />
+                                <button type="button" className="text-green-600 mr-1" onClick={() => saveEditTitle((conversation.id || conversation._id || "") as string)}>Save</button>
+                                <button type="button" className="text-gray-400" onClick={() => setEditingId(null)}>Cancel</button>
+                              </>
+                            ) : (
+                              <>
+                                <div className="font-medium truncate">{conversation.title}</div>
+                                <button
+                                  type="button"
+                                  onClick={() => handleEditTitle((conversation.id || conversation._id || "") as string, conversation.title)}
+                                  className="text-gray-400 hover:text-blue-500 transition-colors p-1 mr-1"
+                                  title="Edit title"
+                                >
+                                  ✏️
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => deleteConversation((conversation.id || conversation._id || "") as string, e)}
+                                  className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                                >
+                                  <Trash className="h-3 w-3" />
+                                </button>
+                              </>
+                            )}
                           </div>
                           <div className="text-xs text-gray-500 truncate">{conversation.preview}</div>
                           <div className="flex items-center text-xs text-gray-400 mt-1">
                             <Clock className="h-3 w-3 mr-1" />
                             <span>{formatDate(conversation.timestamp)}</span>
                           </div>
-                        </div>
+                        </button>
                       ))}
+                      {hasMore && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const nextPage = page + 1
+                            setPage(nextPage)
+                            fetchConversations(nextPage)
+                          }}
+                          className="w-full p-2 mt-2 text-sm bg-gray-200 rounded"
+                        >
+                          Load More
+                        </button>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -400,21 +559,72 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
                               : "px-5 py-3 bg-white text-gray-900 rounded-2xl rounded-tl-none shadow-md border border-gray-100"
                           }`}
                         >
-                          {message.content}
+                          {editingMessageId === message.id ? (
+                            <>
+                              <textarea
+                                value={editMessageContent}
+                                onChange={(e) => setEditMessageContent(e.target.value)}
+                                className="border border-accent bg-white text-gray-900 rounded px-2 py-1 text-sm mr-2 w-64 focus:outline-none focus:ring-2 focus:ring-accent resize-none"
+                                placeholder="Edit your message..."
+                                rows={2}
+                              />
+                              <button type="button" className="text-green-600 mr-1" onClick={() => saveEditMessage(message.id)}>Save</button>
+                              <button type="button" className="text-gray-400" onClick={() => setEditingMessageId(null)}>Cancel</button>
+                            </>
+                          ) : (
+                            <>
+                              {message.content}
+                              {message.role === "user" && (
+                                <button
+                                  type="button"
+                                  className="ml-2 text-gray-400 hover:text-blue-500"
+                                  onClick={() => handleEditMessage(message.id, message.content)}
+                                  title="Edit message"
+                                >
+                                  ✏️
+                                </button>
+                              )}
+                              {Array.isArray((message as { editHistory?: EditHistory[] }).editHistory) && ((message as { editHistory?: EditHistory[] }).editHistory?.length ?? 0) > 0 && (
+                                <button
+                                  type="button"
+                                  className="ml-2 text-xs text-gray-400 underline"
+                                  onClick={() => setShowHistoryFor(message.id)}
+                                >
+                                  View Edit History
+                                </button>
+                              )}
+                              {showHistoryFor === message.id && Array.isArray((message as { editHistory?: EditHistory[] }).editHistory) && (
+                                <div className="bg-gray-100 p-2 rounded mt-1 text-xs">
+                                  {((message as { editHistory?: EditHistory[] }).editHistory ?? []).map((edit, idx) => (
+                                    <div key={`${edit.editedAt}-${idx}`}>
+                                      <span>{new Date(edit.editedAt).toLocaleString()}:</span> {edit.content}
+                                    </div>
+                                  ))}
+                                  <button
+                                    type="button"
+                                    className="mt-1 text-xs text-blue-500 underline"
+                                    onClick={() => setShowHistoryFor(null)}
+                                  >
+                                    Close
+                                  </button>
+                                </div>
+                              )}
+                            </>
+                          )}
                           {message.role === "assistant" && message.content === "" && (
                             <div className="flex space-x-1 h-6 items-center">
                               <div
                                 className="w-2 h-2 rounded-full bg-gray-300 animate-bounce"
                                 style={{ animationDelay: "0ms" }}
-                              ></div>
+                              />
                               <div
                                 className="w-2 h-2 rounded-full bg-gray-300 animate-bounce"
                                 style={{ animationDelay: "150ms" }}
-                              ></div>
+                              />
                               <div
                                 className="w-2 h-2 rounded-full bg-gray-300 animate-bounce"
                                 style={{ animationDelay: "300ms" }}
-                              ></div>
+                              />
                             </div>
                           )}
                         </motion.div>
@@ -475,6 +685,35 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
           </div>
         </div>
       </div>
+      {toast && (
+        <button
+          type="button"
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg z-50 ${toast.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
+          onClick={() => setToast(null)}
+        >
+          {toast.message}
+        </button>
+      )}
+      {/* Confirmation dialog for delete (rendered once) */}
+      {showDeleteId && (() => {
+        const conv = conversations.find(c => (c.id || c._id) === showDeleteId)
+        if (!conv) return null
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+            <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center">
+              <p className="mb-2">Are you sure you want to delete this conversation?</p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className="px-3 py-1 bg-red-500 text-white rounded"
+                  onClick={() => confirmDeleteConversation((conv.id || conv._id || "") as string)}
+                >Delete</button>
+                <button type="button" className="px-3 py-1 bg-gray-200 rounded" onClick={() => setShowDeleteId(null)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }
@@ -482,6 +721,7 @@ export default function Chat({ onFirstInteraction }: { onFirstInteraction?: () =
 function SuggestionButton({ text, onClick }: { text: string; onClick: () => void }) {
   return (
     <motion.button
+      type="button"
       whileHover={{ scale: 1.03, y: -2 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}

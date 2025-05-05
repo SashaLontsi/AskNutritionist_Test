@@ -40,10 +40,10 @@ export function AbstractBackground() {
             height: `${size}px`,
             backgroundColor: color,
             opacity: opacity,
-            "--move-duration": `${duration}s`,
             animationDelay: `${delay}s`,
-          }}
-        ></div>,
+            '--move-duration': `${duration}s`,
+          } as React.CSSProperties}
+        />,
       )
     }
 
@@ -83,10 +83,10 @@ export function AbstractBackground() {
             background: gradient,
             opacity: opacity,
             transform: `rotate(${rotation}deg)`,
-            "--shift-duration": `${duration}s`,
             animationDelay: `${delay}s`,
-          }}
-        ></div>,
+            '--shift-duration': `${duration}s`,
+          } as React.CSSProperties}
+        />,
       )
     }
 
@@ -96,7 +96,7 @@ export function AbstractBackground() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       {/* Base gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100" />
 
       {/* Abstract shapes */}
       {shapes}
@@ -110,7 +110,7 @@ export function AbstractBackground() {
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
         }}
-      ></div>
+      />
 
       {/* Animated gradient overlay */}
       <motion.div
@@ -125,7 +125,7 @@ export function AbstractBackground() {
           ],
         }}
         transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-      ></motion.div>
+      />
     </div>
   )
 }
