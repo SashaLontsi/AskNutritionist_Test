@@ -25,3 +25,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# OpenAI API Key file
+OpenAI API Key (for chat and Q&A).txt
