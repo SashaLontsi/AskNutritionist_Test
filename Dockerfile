@@ -1,5 +1,5 @@
 # ---------- Install dependencies only when needed ----------
-FROM node:20.19.1-slim AS builder
+FROM node:20-alpine3.18 AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 # ---------- Final production image ----------
-FROM node:20.19.1-slim AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

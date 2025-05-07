@@ -178,11 +178,6 @@ export default function AboutPage() {
                 <Card className="overflow-hidden border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                   <div className="aspect-square relative">
                     <Image src={member.image || "/placeholder.svg"} alt={member.name} fill className="object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
-                      <div className="p-6">
-                        <p className="text-white text-sm line-clamp-3">{member.bio}</p>
-                      </div>
-                    </div>
 
                     {/* Decorative elements */}
                     <motion.div

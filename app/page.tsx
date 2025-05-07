@@ -6,7 +6,7 @@ import Footer from "@/components/ui/Footer"
 import { motion } from "framer-motion"
 import { ArrowRight, Leaf } from "lucide-react"
 import SimpleFaq from "@/components/SimpleFaq"
-import TestimonialSlider from "@/components/TestimonialSlider"
+import Testimonials from "@/components/Testimonials"
 
 export default function Home() {
   return (
@@ -144,9 +144,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Slider Section */}
+      {/* Testimonials Section */}
       <section className="py-16 relative overflow-hidden bg-white" aria-label="Testimonials Section">
-        <TestimonialSlider />
+        <Testimonials />
       </section>
 
       {/* FAQ Section */}
