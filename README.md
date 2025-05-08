@@ -24,18 +24,33 @@ Ensure you have the following installed:
 git clone https://github.com/SashaLontsi/AskNutritionist.git
 cd AskNutritionist
 
-## 3. Start the project with Docker
+## 3. Set up environment variables:
+   - Create a `.env.local` file in the root directory of the project. This file is required for environment-specific settings (such as API keys, database URLs, etc.).
+   - Use the following template as a starting point:
+
+   ```env
+   # .env.local example
+   NEXTAUTH_URL=http://localhost:3000
+   NEXTAUTH_SECRET=your_secret_here
+   OPENAI_API_KEY=your_openai_api_key_here
+   MONGODB_URI=your_mongodb_connection_string_here
+   # Add any other environment variables the app needs
+   ```
+   ## Note: 
+   Do not commit your `.env.local` file to version control, as it may contain sensitive information.
+
+## 4. Start the project with Docker
 docker compose up
 
 This will build the Docker image (if not already built) and start the Next.js app inside the container.
 
-## 4. Open in your browser
+## 5. Open in your browser
 
 [Go to http://localhost:3000](http://localhost:3000)
 
 This opens the app in your default browser.
 
-## 5. Running with npm (Alternative)
+## 6. Running with npm (Alternative)
 If you prefer running the app locally without Docker, you can use npm.
 
 Install Dependencies
@@ -49,4 +64,3 @@ npm run dev
 Then, open your browser and navigate to:
 
 http://localhost:3000
-
