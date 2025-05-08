@@ -53,7 +53,7 @@
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
     "next": "^14.2.28",
-    "next-auth": "^4.24.11",
+    "next-auth": "^4.24.7",
     "next-themes": "latest",
     "openai": "^4.97.0",
     "react": "^18",

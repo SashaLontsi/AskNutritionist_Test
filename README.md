@@ -19,13 +19,10 @@ Ensure you have the following installed:
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - [Node.js](https://nodejs.org/) (if you prefer running without Docker)
 
-### 2. Clone the Repository and Switch to the UI Branch
-
-Since the latest UI changes are in the `#2-Arslan` branch (and have not yet been merged into the default branch), do the following:
+### 2. Clone the Repository 
 
 git clone https://github.com/SashaLontsi/AskNutritionist.git
 cd AskNutritionist
-git checkout "#2-Arslan"
 
 ## 3. Start the project with Docker
 docker compose up
