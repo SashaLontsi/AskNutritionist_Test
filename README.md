@@ -9,7 +9,7 @@ A containerized Next.js app built with TypeScript, TailwindCSS, and Docker.
 - **Docker & Docker Compose:** Easily run the app in a containerized environment.
 - **Pages:** Home, About, Contact, and Chat (integrated for AI interactions).
 - **Fully Responsive Design:** Optimized for desktop and mobile.
-- **Modern UI Implementation:** Complete overhaul of the user interface (currently on the "#2-Arslan" branch).
+- **Modern UI Implementation:** Complete overhaul of the user interface.
 
 ## How to Run This Project Locally
 
