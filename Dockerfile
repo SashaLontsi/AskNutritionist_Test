@@ -1,5 +1,5 @@
 # ---------- Install dependencies only when needed ----------
-FROM node:20-alpine3.18 AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
