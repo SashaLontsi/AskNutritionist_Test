@@ -3,4 +3,6 @@ node_modules
 Dockerfile
 docker-compose.yml
 .env
-package-lock.json
+.git
+.DS_Store
+Thumbs.db
